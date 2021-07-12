@@ -528,5 +528,5 @@ glBegin(GL_TRIANGLES);
 glEnd();
 ```
 
-![](.\img\image-20210628184342723.png)
+![渐变图](.\img\image-20210628184342723.png)
 
