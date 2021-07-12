@@ -132,7 +132,7 @@ glLoadIdentity();
 gluOrtho2D(xmin,xmax,ymin,ymax);
 ```
 
-<img src=".\img\2021-05-14 002113.png" alt="image-20210514002136951" style="zoom: 67%;" />
+<img src="./img/2021-05-14 002113.png" alt="image-20210514002136951" style="zoom: 67%;" />
 
 <center>函数指定的显示窗口的世界范围</center>
 
@@ -234,7 +234,7 @@ glEnd();
 
 生成线条如下：
 
-![2021-05-14](.\img\2021-05-14.png)
+![2021-05-14](./img/2021-05-14.png)
 
 ###  填充区图元
 
@@ -262,7 +262,7 @@ glEnd();
 
 > 面片表 $ \rightarrow $ 边表 $ \rightarrow $ 顶点表( $ \rightarrow $ 表示指针)
 
-<img src=".\img\514234423.png" alt="514234423" style="zoom:50%;" />
+<img src="./img/514234423.png" alt="514234423" style="zoom:50%;" />
 
 ###  OpenGL像素阵列函数
 
@@ -298,9 +298,9 @@ glDrawPixels(width,height,dataFormat,dataType,pixMap);
 
 ###  函数小结
 
-![image-20210628125611070](.\img\image-20210628125611070.png)
+![image-20210628125611070](./img/image-20210628125611070.png)
 
-![image-20210628125629776](.\img\image-20210628125629776.png)
+![image-20210628125629776](./img/image-20210628125629776.png)
 
 ###  示例
 
@@ -388,7 +388,7 @@ void main(int argc,char **argv) {
 
 ```
 
-![image-20210628125304759](.\img\image-20210628125304759.png)
+![image-20210628125304759](./img/image-20210628125304759.png)
 
 ##  图元属性
 
@@ -405,7 +405,7 @@ void main(int argc,char **argv) {
 
 由于现在硬件成本降低，更多时候假定RGB编码直接存储在帧缓存中。
 
-![image-20210628152534363](.\img\image-20210628152534363.png)
+![image-20210628152534363](./img/image-20210628152534363.png)
 
 #####  灰度
 
@@ -528,5 +528,5 @@ glBegin(GL_TRIANGLES);
 glEnd();
 ```
 
-![渐变图](.\img\image-20210628184342723.png)
+![渐变图](./img/image-20210628184342723.png)
 
