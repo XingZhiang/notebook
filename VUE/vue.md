@@ -89,7 +89,7 @@ __v-model__:双向数据绑定(可通过前端修改value值)
  </script>
 ```
 
-<img src="E:\笔记\VUE\img\image-20210629224118192.png" alt="image-20210629224118192" style="zoom:67%;" />
+<img src=".\img\image-20210629224118192.png" alt="image-20210629224118192" style="zoom:67%;" />
 
 将 `root._data` 中的数据代理了一份到  `root` 中(底层为 `Object.defineProperty()` )
 
@@ -703,7 +703,7 @@ Vue的生命周期示意图
 
 ##  常用指令
 
-<img src="E:\笔记\VUE\img\image-20210630232934212.png" alt="image-20210630232934212" style="zoom:67%;" />
+<img src=".\img\image-20210630232934212.png" alt="image-20210630232934212" style="zoom:67%;" />
 
 ##  自定义指令
 
@@ -852,7 +852,7 @@ plug.install = function (Vue, options){
 
    *  单文件组件 && 脚手架
 
-     ![image-20210701171638232](E:\笔记\VUE\img\image-20210701171638232.png)
+     ![image-20210701171638232](.\img\image-20210701171638232.png)
 
 ##  refs $$ props
 
