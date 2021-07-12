@@ -7,11 +7,11 @@
 1. 提高速度
 2. 减小内存浪费
 
-<img src="E:\笔记\Cpp\img\image-20210712140141274.png" alt="image-20210712140141274" style="zoom:50%;" />
+<img src=".\img\image-20210712140141274.png" alt="image-20210712140141274" style="zoom:50%;" />
 
 ###  primitives(基本工具)
 
-<img src="E:\笔记\Cpp\img\image-20210712140647295.png" alt="image-20210712140647295" style="zoom:50%;" />
+<img src=".\img\image-20210712140647295.png" alt="image-20210712140647295" style="zoom:50%;" />
 
 ####  基本工具的使用
 
@@ -128,9 +128,9 @@ delete []pca;
 
 * array size,in memory block
 
-  <img src="E:\笔记\Cpp\img\image-20210712155816703.png" alt="image-20210712155816703" style="zoom:100%;" />
+  <img src=".\img\image-20210712155816703.png" alt="image-20210712155816703" style="zoom:100%;" />
 
-<img src="E:\笔记\Cpp\img\image-20210712162400208.png" alt="image-20210712162400208" style="zoom:67%;" />
+<img src=".\img\image-20210712162400208.png" alt="image-20210712162400208" style="zoom:67%;" />
 
 ####  placement new
 
@@ -159,7 +159,7 @@ catch(std::bad_alloc){
 
 ####  重载
 
-<img src="E:\笔记\Cpp\img\image-20210712163905743.png" alt="image-20210712163905743" style="zoom:45%;" />
+<img src=".\img\image-20210712163905743.png" alt="image-20210712163905743" style="zoom:45%;" />
 
 ```C++
 #include <iostream>
