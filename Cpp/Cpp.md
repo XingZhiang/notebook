@@ -511,7 +511,7 @@ int main(){
 }
 ```
 
-<img src="E:/notebook/Cpp/img/image-20210713155937038.png" alt="image-20210713155937038" style="zoom:80%;" />
+<img src="./img/image-20210713155937038.png" alt="image-20210713155937038" style="zoom:80%;" />
 
 没5个一块是连续的。
 
@@ -615,7 +615,7 @@ int main(){
 
 ####  new handler
 
-<img src="E:/notebook/Cpp/img/image-20210713164323566.png" alt="image-20210713164323566" style="zoom:67%;" />
+<img src="./img/image-20210713164323566.png" alt="image-20210713164323566" style="zoom:67%;" />
 
 example:
 
@@ -646,4 +646,4 @@ VC6下的malloc内存布局图
 
 * cookie占用8个字节，小区块将造成大量浪费。由于记录区块大小。
 
-<img src="E:/notebook/Cpp/img/image-20210713175459491.png" alt="image-20210713175459491" style="zoom:50%;" />
+<img src="./img/image-20210713175459491.png" alt="image-20210713175459491" style="zoom:50%;" />
