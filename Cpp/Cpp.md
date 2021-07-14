@@ -647,3 +647,52 @@ VC6下的malloc内存布局图
 * cookie占用8个字节，小区块将造成大量浪费。由于记录区块大小。
 
 <img src="./img/image-20210713175459491.png" alt="image-20210713175459491" style="zoom:50%;" />
+
+#### 旧版(gunc 2.9) alloc测试
+
+```C++
+/*
+ * test for oid alloc
+ */
+#include <ext\pool_allocator.h>
+#include <scoped_allocator>
+#include <vector>
+#include <iostream>
+
+template <typename Alloc>
+void cookie_test(Alloc alloc,size_t size){
+    typename Alloc::value_type *p1,*p2,*p3;
+    p1=alloc.allocate(size);
+    p2=alloc.allocate(size);
+    p3=alloc.allocate(size);
+
+    std::cout<<"p1="<<p1<<" p2="<<p2<<" p3="<<p3<<std::endl;
+
+    alloc.deallocate(p1,sizeof(typename Alloc::value_type));
+    alloc.deallocate(p2,sizeof(typename Alloc::value_type));
+    alloc.deallocate(p3,sizeof(typename Alloc::value_type));
+}
+
+int main(){
+    std::cout<<sizeof(__gnu_cxx::__pool_alloc<int>)<<std::endl;
+    std::vector<int,__gnu_cxx::__pool_alloc<int>> vecPool;
+    cookie_test(__gnu_cxx::__pool_alloc<double>(),1);
+}
+
+/*
+ *1
+ *p1=0x2542800 p2=0x2542808 p3=0x2542810
+ */
+```
+
+我们可以发现，分配的块内存为连续的，并没有给每一块内存上加cookie.
+
+####  std::alloc 运行模式
+
+<img src="./img/image-20210714225603438.png" alt="image-20210714225603438" style="zoom:60%;" />
+
+alloc有16个指针，每一个管理一条内存链。alloc每次分配size \*20 \*2大小的blocks，先将前size \*20大小blockes划分为20的小块，组成链表。
+
+其中size为指针编号加一的8倍，比如#0指针每块为8bytes。当要分配的内存超过128bytes时，alloc就会失效，直接调用malloc( ),此时分配的内存就带cookie了。
+
+串联链表的指针均为 __嵌入式指针__ (embedded pointer),暂时借用内存块的前4个字节。
