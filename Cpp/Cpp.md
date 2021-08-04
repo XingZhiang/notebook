@@ -696,3 +696,50 @@ alloc有16个指针，每一个管理一条内存链。alloc每次分配size \*2
 其中size为指针编号加一的8倍，比如#0指针每块为8bytes。当要分配的内存超过128bytes时，alloc就会失效，直接调用malloc( ),此时分配的内存就带cookie了。
 
 串联链表的指针均为 __嵌入式指针__ (embedded pointer),暂时借用内存块的前4个字节。
+
+* 运行一瞥
+
+  下面几个图片是按顺序的，懒得打字了。
+
+  1. 首先容器的大小32bytes
+
+  <img src="./img/image-20210727172934366.png" alt="image-20210727172934366" style="zoom:75%;" />
+
+  2. 接下来申请的容器大小为64bytes，不分配内存，直接切割上述640bytes战备池(start_free和end_free之间部分)
+
+     <img src="./img/image-20210727173420346.png" alt="image-20210727173420346" style="zoom:75%;" />
+
+  3. 接下来申请的容器大下为96bytes，分配内存
+
+     <img src="./img/image-20210727173937459.png" alt="image-20210727173937459" style="zoom:75%;" />
+
+  4. 接下来申请的容器大小为88bytes，不分配内存，直接从上述2000bytes中切割
+
+     <img src="./img/image-20210727174550273.png" alt="image-20210727174550273" style="zoom:75%;" />
+
+  5. 接下来进行一系列操作
+
+     <img src="E:/Note%20book/Cpp/img/image-20210727175134916.png" alt="image-20210727175134916" style="zoom:75%;" />
+
+<img src="E:/Note%20book/Cpp/img/image-20210727175157259.png" alt="image-20210727175157259" style="zoom:75%;" />
+
+  6. 下面将产生内存碎片，将产生的碎片加到第9号链表上，之后再分配内存
+
+     <img src="E:/Note%20book/Cpp/img/image-20210727175416218.png" alt="image-20210727175416218" style="zoom:75%;" />
+
+     7. 边界情况(内存不足以分配)
+
+        <img src="E:/Note%20book/Cpp/img/image-20210727180722824.png" alt="image-20210727180722824" style="zoom:75%;" />
+
+###  malloc和free
+
+vc6.0下的malloc(贴张图上去，太复杂了，如果要深入理解，可以自己看侯捷的内存管理)
+
+sbh(small block heap)系统
+
+![image-20210803111140863](E:/Note%20book/Cpp/img/image-20210803111140863.png)
+
+###  全局观
+
+![image-20210803182747760](E:/Note%20book/Cpp/img/image-20210803182747760.png)
+
