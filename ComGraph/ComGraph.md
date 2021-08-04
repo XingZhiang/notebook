@@ -356,8 +356,6 @@ void lineGraph(void) {
 		}
 	glFlush();
 	}
-
-
 }
 
 void winReshapeFcn(GLint newWidth, GLint newHeight) {
@@ -453,9 +451,9 @@ glDisable(GL_BLEND);  // 关闭颜色调和特性
 
 计算方法如下:
 
- $  $ 
+$$
 (S_rR_s + D_rR_d , S_gG_s + D_gG_d, S_bB_s +D_bB_d,S_aA_s+D_aA_d)
- $  $ 
+$$
 
 其中RGBA源颜射分量为 $ (R_s,G_s,B_s,A_s) $ ，目标颜色分量为 $ (R_d,G_d,B_d,A_d) $ ,源调和因子为 $ (S_r,S_g,S_b,S_a) $ ,而目标调和因子为 $ (D_r,D_g,D_b,D_a) $ ，取值范围为 $ (0.0,1.0) $ 
 
@@ -529,4 +527,79 @@ glEnd();
 ```
 
 ![渐变图](./img/image-20210628184342723.png)
+
+##  实现图元及属性的算法
+
+###  画线算法
+
+####   直线方程
+
+直线的笛卡尔斜率截距方程为：
+$$
+y=mx+b
+$$
+
+ $ m $ 为直线斜率， $ b $ 为直线截距。在给定两端点 $ (x_0,y_0) $ 和 $ (x_{end}, y_{end}) $ 可计算出：
+$$
+m = \frac{y_{end}-y_0}{x_{end}-x_0} \\
+b = y_0 - mx_0
+$$
+ 
+
+对于任何沿直线给定的 $ x $ 的增量 $ \delta x $ 可以计算出 $y$​​​ 的​增量 $\delta y$ :
+$$
+\delta y = m * \delta x
+$$
+同样对于指定的 $ \delta y $ 的 $x$ 增量 $\delta x$:
+$$
+\delta x = \frac{\delta y}{m}
+$$
+对于具有斜率绝对值 $ \left| m \right| < 1 $ 的直线，可以设置一个较小的水平偏转电压 $\delta x$,求出 $\delta y$.
+
+对于具有斜率绝对值 $ \left| m \right| > 1 $ 的直线，可以设置一个较小的垂直偏转电压 $\delta y$,求出 $\delta x$.
+
+####  DDA算法
+
+DDA算法的思想非常的简单，即从一点起，一单位间隔对线段取样，从而确定另一个坐标轴上最靠近线路径的对应整数值。
+
+示例代码如下：
+
+```C++
+inline int Round(const float a) { return int(a + 0.5); }
+
+void setPixel(int x, int y) {
+    glColor3f(0.0, 1.0, 0.0);
+    glBegin(GL_POINTS);
+    glVertex2i(x, y);
+    glEnd();
+    glFlush();
+}
+
+void lineDDA(int x0, int y0, int xEnd, int yEnd) {
+    int dx = xEnd - x0, dy = yEnd - y0, steps = 0, k = 0;
+    float xIncrement, yIncrement, x = x0, y = y0;
+    steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);
+    xIncrement = float(dx) / float(steps);
+    yIncrement = float(dy) / float(steps);
+
+    setPixel(Round(x), Round(y));
+    for (int i = 0; i < steps; ++i) {
+        x += xIncrement;
+        y += yIncrement;
+        setPixel(Round(x), Round(y));
+    }
+}
+
+void drawline() {
+    lineDDA(0, 0, 100, 100);
+}
+```
+
+这段代码是在《计算机图形学》(第四版)p103页基础上修改而得的，源代码由于未定义 ` setPixel() ` 函数，所以没法运行。
+
+####  Bresenham画线算法
+
+
+
+ 
 
