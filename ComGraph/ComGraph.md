@@ -204,32 +204,7 @@ glEnd();
 OpenGL画线函数的有三种图元参数，分别为：`GL_LINES`直线，`GL_LINE_STRIP`折线，`GL_LINE_LOOP`封闭折线，三种形式代码分别如下。
 
 ```C++
-// 直线(a)
-glBegin(GL_LINES);
-	glVertex2iv(p1);
-	glVertex2iv(p2);
-	glVertex2iv(p3);
-	glVertex2iv(p4);
-	glVertex2iv(p5);
-glEnd();
-
-// 折线(b)
-glBegin(GL_LINE_STRIP);
-	glVertex2iv(p1);
-	glVertex2iv(p2);
-	glVertex2iv(p3);
-	glVertex2iv(p4);
-	glVertex2iv(p5);
-glEnd();
-
-// 封闭折线(c)
-glBegin(GL_LINE_LOOP);
-	glVertex2iv(p1);
-	glVertex2iv(p2);
-	glVertex2iv(p3);
-	glVertex2iv(p4);
-	glVertex2iv(p5);
-glEnd();
+// 直线(a)glBegin(GL_LINES);	glVertex2iv(p1);	glVertex2iv(p2);	glVertex2iv(p3);	glVertex2iv(p4);	glVertex2iv(p5);glEnd();// 折线(b)glBegin(GL_LINE_STRIP);	glVertex2iv(p1);	glVertex2iv(p2);	glVertex2iv(p3);	glVertex2iv(p4);	glVertex2iv(p5);glEnd();// 封闭折线(c)glBegin(GL_LINE_LOOP);	glVertex2iv(p1);	glVertex2iv(p2);	glVertex2iv(p3);	glVertex2iv(p4);	glVertex2iv(p5);glEnd();
 ```
 
 生成线条如下：
@@ -271,23 +246,7 @@ glEnd();
 下面函数定义一个二值的阵列：
 
 ``` C++
-glBitmap(width, height, x0, y0, xOffset, yOffset, bitShape);
-
-// width, height 给出了阵列bitShape和行数和列数。
-// bitShape的每一个像素赋值为1或0.1表示像素用当前设定的颜射显示
-// x0,y0 定义矩形阵列原点的位置
-// xOffset,yOffset坐标位移
-
-// 使用下面子函数来设定光栅当前位置
-glRasterPos*();
-
-// 完整例子如下：
-GLubyte bitShape[20] = { 0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,
-						0xff,0x80,0x7f,0x00,0x3e,0x00,0x1c,0x00,0x08,0x00 };
-glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-glRasterPos2i(30, 40);
-glBitmap(9, 10, 0.0, 0.0, 20.0, 15.0, bitShape);
-
+glBitmap(width, height, x0, y0, xOffset, yOffset, bitShape);// width, height 给出了阵列bitShape和行数和列数。// bitShape的每一个像素赋值为1或0.1表示像素用当前设定的颜射显示// x0,y0 定义矩形阵列原点的位置// xOffset,yOffset坐标位移// 使用下面子函数来设定光栅当前位置glRasterPos*();// 完整例子如下：GLubyte bitShape[20] = { 0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,						0xff,0x80,0x7f,0x00,0x3e,0x00,0x1c,0x00,0x08,0x00 };glPixelStorei(GL_UNPACK_ALIGNMENT, 1);glRasterPos2i(30, 40);glBitmap(9, 10, 0.0, 0.0, 20.0, 15.0, bitShape);
 ```
 
 #### OpenGL像素图函数
@@ -305,85 +264,7 @@ glDrawPixels(width,height,dataFormat,dataType,pixMap);
 ###  示例
 
 ```C++
-#define NDEBUG
-#include <GL/glut.h>
-
-// 窗口尺寸参数
-GLsizei winWidth = 800, winHeight = 500;
-// 光栅位置参数
-GLint xRaster = 25, yRaster = 150;
-
-GLubyte label[36] = { 'J', 'a','n',  'F','e', 'b', 'M','a', 'r', 'A','p','r',  'M','a','y', 'J','u','n',
-					'J','u', 'l', 'A','u','g', 'S','e','p', 'O','c','t', 'N','o','v', 'D','e','c' };
-
-GLint dataValue[12] = { 420,342, 324, 310,262,185,190, 196,217,240,312, 438 };
-
-void init(void) {
-	// 白色背景
-	glClearColor(1.0, 1.0, 1.0, 1.0);
-	glMatrixMode(GL_PROJECTION);
-	gluOrtho2D(0.0, 600.0, 0.0, 500.0);
-
-}
-
-void lineGraph(void) {
-	GLint month, k;
-	GLint x = 30;
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(0.0, 0.0, 1.0);
-
-	glBegin(GL_LINE_STRIP);
-	for (k = 0; k < 12; k++) {
-		glVertex2i(x + k * 50, dataValue[k]);
-	}
-	glEnd();
-
-	// 设置标志颜色为红色
-	glColor3f(1.0, 0.0, 0.0);
-
-	for (k = 0; k < 12; k++) {
-		glRasterPos2i(xRaster + k * 50, dataValue[k] - 4);
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');
-	}
-
-	glColor3f(0.0, 0.0, 0.0);
-	xRaster = 20;
-	for (month = 0; month < 12; month++) {
-		glRasterPos2i(xRaster + month * 50, yRaster);
-		for (k = 3 * month;  k < 3 * month + 3; k++) {
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, label[k]);
-		}
-	glFlush();
-	}
-}
-
-void winReshapeFcn(GLint newWidth, GLint newHeight) {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0.0, GLdouble(newWidth), 0.0, GLdouble(newHeight));
-
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void main(int argc,char **argv) {
-	// 初始化GLUT
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	// 设置窗口位置
-	glutInitWindowPosition(100,100);
-	// 设置窗口尺寸
-	glutInitWindowSize(winWidth,winHeight);
-	// 创建窗口
-	glutCreateWindow("Hello World");
-
-	init();
-	glutDisplayFunc(lineGraph);
-	glutReshapeFunc(winReshapeFcn);
-	glutMainLoop();
-
-}
-
+#define NDEBUG#include <GL/glut.h>// 窗口尺寸参数GLsizei winWidth = 800, winHeight = 500;// 光栅位置参数GLint xRaster = 25, yRaster = 150;GLubyte label[36] = { 'J', 'a','n',  'F','e', 'b', 'M','a', 'r', 'A','p','r',  'M','a','y', 'J','u','n',					'J','u', 'l', 'A','u','g', 'S','e','p', 'O','c','t', 'N','o','v', 'D','e','c' };GLint dataValue[12] = { 420,342, 324, 310,262,185,190, 196,217,240,312, 438 };void init(void) {	// 白色背景	glClearColor(1.0, 1.0, 1.0, 1.0);	glMatrixMode(GL_PROJECTION);	gluOrtho2D(0.0, 600.0, 0.0, 500.0);}void lineGraph(void) {	GLint month, k;	GLint x = 30;	glClear(GL_COLOR_BUFFER_BIT);	glColor3f(0.0, 0.0, 1.0);	glBegin(GL_LINE_STRIP);	for (k = 0; k < 12; k++) {		glVertex2i(x + k * 50, dataValue[k]);	}	glEnd();	// 设置标志颜色为红色	glColor3f(1.0, 0.0, 0.0);	for (k = 0; k < 12; k++) {		glRasterPos2i(xRaster + k * 50, dataValue[k] - 4);		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');	}	glColor3f(0.0, 0.0, 0.0);	xRaster = 20;	for (month = 0; month < 12; month++) {		glRasterPos2i(xRaster + month * 50, yRaster);		for (k = 3 * month;  k < 3 * month + 3; k++) {			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, label[k]);		}	glFlush();	}}void winReshapeFcn(GLint newWidth, GLint newHeight) {	glMatrixMode(GL_PROJECTION);	glLoadIdentity();	gluOrtho2D(0.0, GLdouble(newWidth), 0.0, GLdouble(newHeight));	glClear(GL_COLOR_BUFFER_BIT);}void main(int argc,char **argv) {	// 初始化GLUT	glutInit(&argc, argv);	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);	// 设置窗口位置	glutInitWindowPosition(100,100);	// 设置窗口尺寸	glutInitWindowSize(winWidth,winHeight);	// 创建窗口	glutCreateWindow("Hello World");	init();	glutDisplayFunc(lineGraph);	glutReshapeFunc(winReshapeFcn);	glutMainLoop();}
 ```
 
 ![image-20210628125304759](./img/image-20210628125304759.png)
@@ -412,30 +293,22 @@ void main(int argc,char **argv) {
 #####  OpenGL颜色函数
 
 ```C++
-glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-// GLUT_SINGLE : 指示正在使用单个帧缓存 
-// GLUT_RGB : 设定RGB模式，如果要用指向颜色表的索引来指定颜色，则用GLUT_INDEX代替GLUT_RGB 
+glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);// GLUT_SINGLE : 指示正在使用单个帧缓存 // GLUT_RGB : 设定RGB模式，如果要用指向颜色表的索引来指定颜色，则用GLUT_INDEX代替GLUT_RGB 
 ```
+
 >__RGBA模式__
-RGBA模式比RGB模式多了一个 $ \alpha $ 系数，用于控制颜色调和。要使用RGBA模式，将上述GLUT_RGB替换为GLUT_RGBA。 $ \alpha $ 的值与透明度相对应，通常通过调节 $ \alpha $ 的值来调节透明度。
+>RGBA模式比RGB模式多了一个 $ \alpha $ 系数，用于控制颜色调和。要使用RGBA模式，将上述GLUT_RGB替换为GLUT_RGBA。 $ \alpha $ 的值与透明度相对应，通常通过调节 $ \alpha $ 的值来调节透明度。
 
 在__RGB(RGBA模式)__模式中，使用下面函数设定颜色分量：
 
 ```C++
-glColor*(R,G,B,[alpha]);
-
-// 例子
-glColor3f(0.0,1.0,1.0);
-glColor4f(0.0,1.0,1.0,0.5);
+glColor*(R,G,B,[alpha]);// 例子glColor3f(0.0,1.0,1.0);glColor4f(0.0,1.0,1.0,0.5);
 ```
 
 在__颜色索引模式__中，使用下列函数来设定当前颜色：
 
 ```C++
-glIndex*(colorIndex);  // colorIndex非负整数
-
-// 例子
-glIndexi(196) // 将颜色设定为196处的颜色值
+glIndex*(colorIndex);  // colorIndex非负整数// 例子glIndexi(196) // 将颜色设定为196处的颜色值
 ```
 
 
@@ -445,8 +318,7 @@ glIndexi(196) // 将颜色设定为196处的颜色值
 调和方法仅在RGB模式(RGBA模式)下进行。
 
 ```C++
-glEnable(GL_BLEND);  // 激活颜色调和特性
-glDisable(GL_BLEND);  // 关闭颜色调和特性
+glEnable(GL_BLEND);  // 激活颜色调和特性glDisable(GL_BLEND);  // 关闭颜色调和特性
 ```
 
 计算方法如下:
@@ -460,43 +332,19 @@ $$
 使用下列函数可设定调和因子的值：
 
 ```C++
-glBlendFunc(sFactor,dFactor);
-
-//GL_ZERO : (0.0,0.0,0.0,0.0) dFactor默认值
-//GL_ONE : (1.0,1.0,1.0,1.0) sFactor默认值
+glBlendFunc(sFactor,dFactor);//GL_ZERO : (0.0,0.0,0.0,0.0) dFactor默认值//GL_ONE : (1.0,1.0,1.0,1.0) sFactor默认值
 ```
 
 ####  点的属性
 
 ```C++
-glPointSize(size);
-// 设定点的大小，size为正浮点数
+glPointSize(size);// 设定点的大小，size为正浮点数
 ```
 
 ####  线的属性
 
 ```C++
-// 线宽函数 
-glLineWidth(width);
-
-// 线型函数
-// 激活OpenGL线型模型
-glEnable(GL_LINE_STIPPLE);
-glLineStipple(repeatFactor,pattern);
-/*pattern为描述线段的16位整数，值为1的位代表一个“开”像素，值为0的位代表一个“关”像素。该模式从低位开始应用于线路径。
- *repeatFactor(重复因子)表示模式中每一位应用多少次应用下一位，默认为1.
- */
-
-
-// 颜色渐变
-glShadeModel (GL_SMOOTH);       
-glBegin(GL_LINES);
-	glColor3f(0.0, 0.0, 1.0);
-	glVertex2i(50, 50);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex2i(250, 250);
-glEnd();
-/*线段颜色将为蓝色和红色之间的渐变色*/
+// 线宽函数 glLineWidth(width);// 线型函数// 激活OpenGL线型模型glEnable(GL_LINE_STIPPLE);glLineStipple(repeatFactor,pattern);/*pattern为描述线段的16位整数，值为1的位代表一个“开”像素，值为0的位代表一个“关”像素。该模式从低位开始应用于线路径。 *repeatFactor(重复因子)表示模式中每一位应用多少次应用下一位，默认为1. */// 颜色渐变glShadeModel (GL_SMOOTH);       glBegin(GL_LINES);	glColor3f(0.0, 0.0, 1.0);	glVertex2i(50, 50);	glColor3f(1.0, 0.0, 0.0);	glVertex2i(250, 250);glEnd();/*线段颜色将为蓝色和红色之间的渐变色*/
 ```
 
 ####  填充区属性
@@ -512,18 +360,9 @@ glEnd();
   > 用矩形图案填充一个区域的处理称为__平铺__，而矩形填充图有时候称为__平铺图案__.
 
   
-```C++
-// 插值填充
-glShadeModel(GL_SMOOTH);
 
-glBegin(GL_TRIANGLES);
-	glColor3f(0.0, 0.0, 1.0);
-	glVertex2i(50, 50);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex2i(150,50);
-	glColor3f(0.0, 1.0, 0.0);
-	glVertex2i(75, 150);
-glEnd();
+```C++
+// 插值填充glShadeModel(GL_SMOOTH);glBegin(GL_TRIANGLES);	glColor3f(0.0, 0.0, 1.0);	glVertex2i(50, 50);	glColor3f(1.0, 0.0, 0.0);	glVertex2i(150,50);	glColor3f(0.0, 1.0, 0.0);	glVertex2i(75, 150);glEnd();
 ```
 
 ![渐变图](./img/image-20210628184342723.png)
@@ -544,7 +383,7 @@ $$
 m = \frac{y_{end}-y_0}{x_{end}-x_0} \\
 b = y_0 - mx_0
 $$
- 
+
 
 对于任何沿直线给定的 $ x $ 的增量 $ \delta x $ 可以计算出 $y$​​​ 的​增量 $\delta y$ :
 $$
@@ -554,9 +393,9 @@ $$
 $$
 \delta x = \frac{\delta y}{m}
 $$
-对于具有斜率绝对值 $ \left| m \right| < 1 $ 的直线，可以设置一个较小的水平偏转电压 $\delta x$,求出 $\delta y$.
+__对于具有斜率绝对值 $ \left| m \right| < 1 $ 的直线，可以设置一个较小的水平偏转电压 $\delta x$,求出 $\delta y$​.__
 
-对于具有斜率绝对值 $ \left| m \right| > 1 $ 的直线，可以设置一个较小的垂直偏转电压 $\delta y$,求出 $\delta x$.
+__对于具有斜率绝对值 $ \left| m \right| > 1 $ 的直线，可以设置一个较小的垂直偏转电压 $\delta y$,求出 $\delta x$​.__
 
 ####  DDA算法
 
@@ -565,41 +404,81 @@ DDA算法的思想非常的简单，即从一点起，一单位间隔对线段�
 示例代码如下：
 
 ```C++
-inline int Round(const float a) { return int(a + 0.5); }
-
-void setPixel(int x, int y) {
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_POINTS);
-    glVertex2i(x, y);
-    glEnd();
-    glFlush();
-}
-
-void lineDDA(int x0, int y0, int xEnd, int yEnd) {
-    int dx = xEnd - x0, dy = yEnd - y0, steps = 0, k = 0;
-    float xIncrement, yIncrement, x = x0, y = y0;
-    steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);
-    xIncrement = float(dx) / float(steps);
-    yIncrement = float(dy) / float(steps);
-
-    setPixel(Round(x), Round(y));
-    for (int i = 0; i < steps; ++i) {
-        x += xIncrement;
-        y += yIncrement;
-        setPixel(Round(x), Round(y));
-    }
-}
-
-void drawline() {
-    lineDDA(0, 0, 100, 100);
-}
+inline int Round(const float a) { return int(a + 0.5); }void setPixel(int x, int y) {    glColor3f(0.0, 1.0, 0.0);    glBegin(GL_POINTS);    glVertex2i(x, y);    glEnd();    glFlush();}void lineDDA(int x0, int y0, int xEnd, int yEnd) {    int dx = xEnd - x0, dy = yEnd - y0, steps = 0, k = 0;    float xIncrement, yIncrement, x = x0, y = y0;    steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);    xIncrement = float(dx) / float(steps);    yIncrement = float(dy) / float(steps);    setPixel(Round(x), Round(y));    for (int i = 0; i < steps; ++i) {        x += xIncrement;        y += yIncrement;        setPixel(Round(x), Round(y));    }}void drawline() {    lineDDA(0, 0, 100, 100);}
 ```
 
 这段代码是在《计算机图形学》(第四版)p103页基础上修改而得的，源代码由于未定义 ` setPixel() ` 函数，所以没法运行。
 
 ####  Bresenham画线算法
 
+<img src="E:/Note%20book/ComGraph/img/image-20210805090834332.png" alt="image-20210805090834332" style="zoom:50%;" />
 
+Bresenham画线算法的基本思想为寻找更接近线段路径的像素点，即如图，要判断下了一个像素点是落在 $(11,11)$​ 还是落在 $(11,12)$​.
 
- 
+#####  推导过程如下
+
+考虑斜率小于1的直线的扫描过程
+
+<img src="E:/Note%20book/ComGraph/img/image-20210805091333170.png" alt="image-20210805091333170" style="zoom:50%;" />
+
+在取样位置 $x_k+1$ ,使用 $d_{lower}$ 和 $d_{upper}$ 来标识两个像素在数学路径上的垂直偏移，对于在位置$x_k+1$ 处的 $y$ 值为：
+$$
+y=m(x_k+1)+b
+$$
+那么：
+$$
+\begin{split}
+d_{lower} &= y-y_k\\
+ &=m(x_k+1)+b-y_k  \end{split}\tag{1.1} \\
+$$
+且：
+$$
+\begin{split}
+d_{upper} &= (y_k+1) -y \\
+&=y_k+1 - m(x_k+1)-b \end{split} \tag{1.2}
+$$
+要确定像素那个更接近，需要计算差值：
+$$
+d_{lower} - d_{upper} = 2m(x_k+1) -2y_k +2b-1
+$$
+进而获取决策参数$p_k$:
+$$
+\begin{split}
+p_k &= \Delta x(d_{lower}-d_{upper}) \\
+&= 2 \Delta x_k - 2 \Delta x y_k + c
+\end{split} \tag{1.3} \\
+$$
+其中$c$为常数，值为$2 \Delta y+ \Delta x(2b-1)$
+
+进而，
+$$
+p_{k+1}= 2 \Delta y x_{k+1} -2 \Delta x y_{k+1} +c \tag{1.4}
+$$
+
+$(1.4)-(1.3)$​得：
+$$
+p_{k+1} = p_{k} + 2 \Delta y -2 \Delta x(y_{K+1} - y_k)
+$$
+将起始像素位置 $(x_0,y_0)$ 和第一个参数 $p_0$ 通过方程 $(1.3)$ 及 $m = 2 \Delta y / \Delta x$ 得：
+$$
+p_0 = 2 \Delta y - \Delta x
+$$
+
+#####  |m|<1时的Bresenham画线算法
+
+1. 输入线段的两个端点，并将左端点存储在 $(x_0,y_0)$ 中;
+2. 将 $(x_0,y_0)$ 装入帧缓存，画出第一个点;
+3. 计算常量 $\Delta x , \Delta y, 2\Delta y $ 和 $ 2\Delta y - 2\Delta x$​ ,并得到决策参数的第一个值:
+$$
+p_0 = 2 \Delta y - \Delta x
+$$
+4. 从 $k=0$ 开始，在沿线段路径的每个 $x$ 处，进行下列检测:如果 $p_0<0$,下一个要绘制的点是 $(x_k+1,y)$ ,并且
+$$
+p_k+1= p_0 + 2\Delta y
+$$
+否则，下一个要绘制的点是 $(x_k+1, y_k+1) $，并且
+$$
+p_k+1 = p_k+ 2 \Delta y- 2 \Delta x
+$$
+5. 重复步骤4,共 $\Delta x -1$次。 
 
