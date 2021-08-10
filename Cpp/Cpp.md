@@ -719,17 +719,17 @@ alloc有16个指针，每一个管理一条内存链。alloc每次分配size \*2
 
   5. 接下来进行一系列操作
 
-     <img src="E:/Note%20book/Cpp/img/image-20210727175134916.png" alt="image-20210727175134916" style="zoom:75%;" />
+     <img src="./img/image-20210727175134916.png" alt="image-20210727175134916" style="zoom:75%;" />
 
-<img src="E:/Note%20book/Cpp/img/image-20210727175157259.png" alt="image-20210727175157259" style="zoom:75%;" />
+<img src="./img/image-20210727175157259.png" alt="image-20210727175157259" style="zoom:75%;" />
 
   6. 下面将产生内存碎片，将产生的碎片加到第9号链表上，之后再分配内存
 
-     <img src="E:/Note%20book/Cpp/img/image-20210727175416218.png" alt="image-20210727175416218" style="zoom:75%;" />
+     <img src="./img/image-20210727175416218.png" alt="image-20210727175416218" style="zoom:75%;" />
 
      7. 边界情况(内存不足以分配)
 
-        <img src="E:/Note%20book/Cpp/img/image-20210727180722824.png" alt="image-20210727180722824" style="zoom:75%;" />
+        <img src="./img/image-20210727180722824.png" alt="image-20210727180722824" style="zoom:75%;" />
 
 ###  malloc和free
 
@@ -737,9 +737,9 @@ vc6.0下的malloc(贴张图上去，太复杂了，如果要深入理解，可�
 
 sbh(small block heap)系统
 
-![image-20210803111140863](E:/Note%20book/Cpp/img/image-20210803111140863.png)
+![image-20210803111140863](./img/image-20210803111140863.png)
 
 ###  全局观
 
-![image-20210803182747760](E:/Note%20book/Cpp/img/image-20210803182747760.png)
+![image-20210803182747760](./img/image-20210803182747760.png)
 
