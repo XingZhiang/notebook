@@ -204,7 +204,31 @@ glEnd();
 OpenGL画线函数的有三种图元参数，分别为：`GL_LINES`直线，`GL_LINE_STRIP`折线，`GL_LINE_LOOP`封闭折线，三种形式代码分别如下。
 
 ```C++
-// 直线(a)glBegin(GL_LINES);	glVertex2iv(p1);	glVertex2iv(p2);	glVertex2iv(p3);	glVertex2iv(p4);	glVertex2iv(p5);glEnd();// 折线(b)glBegin(GL_LINE_STRIP);	glVertex2iv(p1);	glVertex2iv(p2);	glVertex2iv(p3);	glVertex2iv(p4);	glVertex2iv(p5);glEnd();// 封闭折线(c)glBegin(GL_LINE_LOOP);	glVertex2iv(p1);	glVertex2iv(p2);	glVertex2iv(p3);	glVertex2iv(p4);	glVertex2iv(p5);glEnd();
+// 直线(a)
+glBegin(GL_LINES);	
+glVertex2iv(p1);	
+glVertex2iv(p2);	
+glVertex2iv(p3);	
+glVertex2iv(p4);	
+glVertex2iv(p5);
+glEnd();
+
+// 折线(b)
+glBegin(GL_LINE_STRIP);	
+glVertex2iv(p1);	
+glVertex2iv(p2);	
+glVertex2iv(p3);	
+glVertex2iv(p4);	
+glVertex2iv(p5);glEnd();
+
+// 封闭折线(c)
+glBegin(GL_LINE_LOOP);	
+glVertex2iv(p1);	
+glVertex2iv(p2);	
+glVertex2iv(p3);	
+glVertex2iv(p4);	
+glVertex2iv(p5);
+glEnd();
 ```
 
 生成线条如下：
@@ -246,7 +270,16 @@ OpenGL画线函数的有三种图元参数，分别为：`GL_LINES`直线，`GL_
 下面函数定义一个二值的阵列：
 
 ``` C++
-glBitmap(width, height, x0, y0, xOffset, yOffset, bitShape);// width, height 给出了阵列bitShape和行数和列数。// bitShape的每一个像素赋值为1或0.1表示像素用当前设定的颜射显示// x0,y0 定义矩形阵列原点的位置// xOffset,yOffset坐标位移// 使用下面子函数来设定光栅当前位置glRasterPos*();// 完整例子如下：GLubyte bitShape[20] = { 0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,						0xff,0x80,0x7f,0x00,0x3e,0x00,0x1c,0x00,0x08,0x00 };glPixelStorei(GL_UNPACK_ALIGNMENT, 1);glRasterPos2i(30, 40);glBitmap(9, 10, 0.0, 0.0, 20.0, 15.0, bitShape);
+glBitmap(width, height, x0, y0, xOffset, yOffset, bitShape);
+// width, height 给出了阵列bitShape和行数和列数。
+// bitShape的每一个像素赋值为1或0.1表示像素用当前设定的颜射显示
+// x0,y0 定义矩形阵列原点的位置// xOffset,yOffset坐标位移
+// 使用下面子函数来设定光栅当前位置glRasterPos*();
+// 完整例子如下：
+GLubyte bitShape[20] = { 0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,0x1c,0x00,						0xff,0x80,0x7f,0x00,0x3e,0x00,0x1c,0x00,0x08,0x00 };
+glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+glRasterPos2i(30, 40);
+glBitmap(9, 10, 0.0, 0.0, 20.0, 15.0, bitShape);
 ```
 
 #### OpenGL像素图函数
@@ -264,7 +297,61 @@ glDrawPixels(width,height,dataFormat,dataType,pixMap);
 ###  示例
 
 ```C++
-#define NDEBUG#include <GL/glut.h>// 窗口尺寸参数GLsizei winWidth = 800, winHeight = 500;// 光栅位置参数GLint xRaster = 25, yRaster = 150;GLubyte label[36] = { 'J', 'a','n',  'F','e', 'b', 'M','a', 'r', 'A','p','r',  'M','a','y', 'J','u','n',					'J','u', 'l', 'A','u','g', 'S','e','p', 'O','c','t', 'N','o','v', 'D','e','c' };GLint dataValue[12] = { 420,342, 324, 310,262,185,190, 196,217,240,312, 438 };void init(void) {	// 白色背景	glClearColor(1.0, 1.0, 1.0, 1.0);	glMatrixMode(GL_PROJECTION);	gluOrtho2D(0.0, 600.0, 0.0, 500.0);}void lineGraph(void) {	GLint month, k;	GLint x = 30;	glClear(GL_COLOR_BUFFER_BIT);	glColor3f(0.0, 0.0, 1.0);	glBegin(GL_LINE_STRIP);	for (k = 0; k < 12; k++) {		glVertex2i(x + k * 50, dataValue[k]);	}	glEnd();	// 设置标志颜色为红色	glColor3f(1.0, 0.0, 0.0);	for (k = 0; k < 12; k++) {		glRasterPos2i(xRaster + k * 50, dataValue[k] - 4);		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');	}	glColor3f(0.0, 0.0, 0.0);	xRaster = 20;	for (month = 0; month < 12; month++) {		glRasterPos2i(xRaster + month * 50, yRaster);		for (k = 3 * month;  k < 3 * month + 3; k++) {			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, label[k]);		}	glFlush();	}}void winReshapeFcn(GLint newWidth, GLint newHeight) {	glMatrixMode(GL_PROJECTION);	glLoadIdentity();	gluOrtho2D(0.0, GLdouble(newWidth), 0.0, GLdouble(newHeight));	glClear(GL_COLOR_BUFFER_BIT);}void main(int argc,char **argv) {	// 初始化GLUT	glutInit(&argc, argv);	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);	// 设置窗口位置	glutInitWindowPosition(100,100);	// 设置窗口尺寸	glutInitWindowSize(winWidth,winHeight);	// 创建窗口	glutCreateWindow("Hello World");	init();	glutDisplayFunc(lineGraph);	glutReshapeFunc(winReshapeFcn);	glutMainLoop();}
+#define NDEBUG
+#include <GL/glut.h>
+// 窗口尺寸参数
+GLsizei winWidth = 800, winHeight = 500;
+// 光栅位置参数GLint xRaster = 25, yRaster = 150;
+GLubyte label[36] = { 'J', 'a','n',  'F','e', 'b', 'M','a', 'r', 'A','p','r',  'M','a','y', 'J','u','n',					'J','u', 'l', 'A','u','g', 'S','e','p', 'O','c','t', 'N','o','v', 'D','e','c' };
+GLint dataValue[12] = { 420,342, 324, 310,262,185,190, 196,217,240,312, 438 };void init(void) {	
+    // 白色背景	
+    glClearColor(1.0, 1.0, 1.0, 1.0);	
+    glMatrixMode(GL_PROJECTION);	
+    gluOrtho2D(0.0, 600.0, 0.0, 500.0);
+}
+void lineGraph(void) {	
+    GLint month, k;	GLint x = 30;	
+    glClear(GL_COLOR_BUFFER_BIT);	
+    glColor3f(0.0, 0.0, 1.0);	
+    glBegin(GL_LINE_STRIP);	
+    for (k = 0; k < 12; k++) {		
+        glVertex2i(x + k * 50, dataValue[k]);	
+    }	
+    glEnd();	
+    // 设置标志颜色为红色	
+    glColor3f(1.0, 0.0, 0.0);	
+    for (k = 0; k < 12; k++) {		
+        glRasterPos2i(xRaster + k * 50, dataValue[k] - 4);		
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '*');	
+    }	
+    glColor3f(0.0, 0.0, 0.0);	
+    xRaster = 20;	
+    for (month = 0; month < 12; month++) {		
+        glRasterPos2i(xRaster + month * 50, yRaster);		
+        for (k = 3 * month;  k < 3 * month + 3; k++) {			
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, label[k]);		
+        }	
+        glFlush();	
+    }}
+void winReshapeFcn(GLint newWidth, GLint newHeight) {	
+    glMatrixMode(GL_PROJECTION);	
+    glLoadIdentity();	
+    gluOrtho2D(0.0, GLdouble(newWidth), 0.0, GLdouble(newHeight));	
+    glClear(GL_COLOR_BUFFER_BIT);}void main(int argc,char **argv) {	
+    // 初始化GLUT	
+    glutInit(&argc, argv);	
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);	
+    // 设置窗口位置	
+    glutInitWindowPosition(100,100);	
+    // 设置窗口尺寸	
+    glutInitWindowSize(winWidth,winHeight);	
+    // 创建窗口	
+    glutCreateWindow("Hello World");	
+    init();	
+    glutDisplayFunc(lineGraph);	
+    glutReshapeFunc(winReshapeFcn);	
+    glutMainLoop();
+}
 ```
 
 ![image-20210628125304759](./img/image-20210628125304759.png)
@@ -344,7 +431,21 @@ glPointSize(size);// 设定点的大小，size为正浮点数
 ####  线的属性
 
 ```C++
-// 线宽函数 glLineWidth(width);// 线型函数// 激活OpenGL线型模型glEnable(GL_LINE_STIPPLE);glLineStipple(repeatFactor,pattern);/*pattern为描述线段的16位整数，值为1的位代表一个“开”像素，值为0的位代表一个“关”像素。该模式从低位开始应用于线路径。 *repeatFactor(重复因子)表示模式中每一位应用多少次应用下一位，默认为1. */// 颜色渐变glShadeModel (GL_SMOOTH);       glBegin(GL_LINES);	glColor3f(0.0, 0.0, 1.0);	glVertex2i(50, 50);	glColor3f(1.0, 0.0, 0.0);	glVertex2i(250, 250);glEnd();/*线段颜色将为蓝色和红色之间的渐变色*/
+// 线宽函数 
+glLineWidth(width);
+// 线型函数
+// 激活OpenGL线型模型
+glEnable(GL_LINE_STIPPLE);glLineStipple(repeatFactor,pattern);
+/*pattern为描述线段的16位整数，值为1的位代表一个“开”像素，值为0的位代表一个“关”像素。该模式从低位开始应用于线路径。 *repeatFactor(重复因子)表示模式中每一位应用多少次应用下一位，默认为1. */
+// 颜色渐变
+glShadeModel (GL_SMOOTH);       
+glBegin(GL_LINES);	
+glColor3f(0.0, 0.0, 1.0);	
+glVertex2i(50, 50);	
+glColor3f(1.0, 0.0, 0.0);	
+glVertex2i(250, 250);
+glEnd();
+/*线段颜色将为蓝色和红色之间的渐变色*/
 ```
 
 ####  填充区属性
@@ -362,7 +463,16 @@ glPointSize(size);// 设定点的大小，size为正浮点数
   
 
 ```C++
-// 插值填充glShadeModel(GL_SMOOTH);glBegin(GL_TRIANGLES);	glColor3f(0.0, 0.0, 1.0);	glVertex2i(50, 50);	glColor3f(1.0, 0.0, 0.0);	glVertex2i(150,50);	glColor3f(0.0, 1.0, 0.0);	glVertex2i(75, 150);glEnd();
+// 插值填充
+glShadeModel(GL_SMOOTH);
+glBegin(GL_TRIANGLES);	
+glColor3f(0.0, 0.0, 1.0);	
+glVertex2i(50, 50);	
+glColor3f(1.0, 0.0, 0.0);	
+glVertex2i(150,50);	
+glColor3f(0.0, 1.0, 0.0);	
+glVertex2i(75, 150);
+glEnd();
 ```
 
 ![渐变图](./img/image-20210628184342723.png)
@@ -404,7 +514,30 @@ DDA算法的思想非常的简单，即从一点起，一单位间隔对线段�
 示例代码如下：
 
 ```C++
-inline int Round(const float a) { return int(a + 0.5); }void setPixel(int x, int y) {    glColor3f(0.0, 1.0, 0.0);    glBegin(GL_POINTS);    glVertex2i(x, y);    glEnd();    glFlush();}void lineDDA(int x0, int y0, int xEnd, int yEnd) {    int dx = xEnd - x0, dy = yEnd - y0, steps = 0, k = 0;    float xIncrement, yIncrement, x = x0, y = y0;    steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);    xIncrement = float(dx) / float(steps);    yIncrement = float(dy) / float(steps);    setPixel(Round(x), Round(y));    for (int i = 0; i < steps; ++i) {        x += xIncrement;        y += yIncrement;        setPixel(Round(x), Round(y));    }}void drawline() {    lineDDA(0, 0, 100, 100);}
+inline int Round(const float a) { return int(a + 0.5); }
+void setPixel(int x, int y) {    
+    glColor3f(0.0, 1.0, 0.0);    
+    glBegin(GL_POINTS);    
+    glVertex2i(x, y);    
+    glEnd();    
+    glFlush();
+}
+void lineDDA(int x0, int y0, int xEnd, int yEnd) {    
+    int dx = xEnd - x0, dy = yEnd - y0, steps = 0, k = 0;    
+    float xIncrement, yIncrement, x = x0, y = y0;   
+    steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);    
+    xIncrement = float(dx) / float(steps);    
+    yIncrement = float(dy) / float(steps);   
+    setPixel(Round(x), Round(y));    
+    for (int i = 0; i < steps; ++i) {        
+        x += xIncrement;        
+        y += yIncrement;        
+        setPixel(Round(x), Round(y));    
+    }
+}
+void drawline() {    
+    lineDDA(0, 0, 100, 100);
+}
 ```
 
 这段代码是在《计算机图形学》(第四版)p103页基础上修改而得的，源代码由于未定义 ` setPixel() ` 函数，所以没法运行。
