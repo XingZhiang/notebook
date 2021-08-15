@@ -315,7 +315,7 @@ DEST和SRC不能都为存储器操作数。
 
 ```assembly
 ADC DEST, SRC
-// DEST <= (DEST) + (SRC) + CF
+# DEST <= (DEST) + (SRC) + CF
 ```
 
 用ADC可以实现大于16位的数的相加
@@ -339,7 +339,7 @@ DEST <= (DEST) - (SRC)
 
 ```assembly
 SBB DEST, SRC
-// DEST <= (DEST) -（SRC) - CF
+# DEST <= (DEST) -（SRC) - CF
 ```
 
 #####  减一指令
@@ -352,7 +352,7 @@ DES DEST
 
 ```assembly
 NEG DEST
-// DEST <= 0-(DEST)
+# DEST <= 0-(DEST)
 ```
 
 也叫取补指令
