@@ -1,4 +1,4 @@
-#   汇编语言程序设计
+#   8086汇编语言程序设计
 
 ##  微机的功能结构
 
@@ -110,6 +110,9 @@ Intel8086/8088各指令中提供操作数的方法有以下四种:
    MOV BX, VAR
    MOV AL, DATA+2
    MOV AX, DS:[64H]
+   ```
+
+   
 
 4. 寄存器间接寻址
 
@@ -137,8 +140,12 @@ Intel8086/8088各指令中提供操作数的方法有以下四种:
 
    ```assembly
    MOV AX, 10H[SI]
+   MOV AX, [SI+10H]
+   MOV AX, [SI].10H
    MOV TABLE[DI], AL
    ```
+
+   
 
 6. 基址变址寻址
 
@@ -483,3 +490,196 @@ NOP
 ```
 
 执行一次NOP占用CPU三个时钟周期，它不改变任何寄存器或存储单元内容，主要用于延时。
+
+###   编码格式
+
+Intel8086/8088汇编指令的编码格式有四种基本格式。
+
+1. 双操作数指令编码格式
+2. 单操作数指令编码格式
+3. 与AX或AL有关的指令编码格式
+4. 其它 指令编码格式
+
+##  一些东西
+
+###  loop
+
+CPU执行loop时做两件事：
+
+1. (cx) = (cx) - 1;
+2. 判断cx中的值，如果不为零继续循环，为零跳出循环
+
+也就是说cx存放循环次数
+
+###  段操作
+
+``` assembly
+assume cs:codesg, ds:datasg, ss:stacksg
+
+datasg segment
+    dw 0123h,0456h,0789h,0abch
+datasg ends
+
+stacksg segment
+    dw 0,0,0,0,0,0,0,0
+stacksg ends
+
+codesg segment
+start:
+    mov ax, stacksg 
+    mov ss, ax  
+    mov sp, 10h
+
+    mov ax, datasg  
+    mov ds, ax
+
+    mov bx, 0
+    mov cx,4 
+s:  push ds:[bx]
+    add bx, 2
+    loop s
+
+    mov bx, 0
+    mov cx, 4
+s0: pop ds:[bx]
+    add bx, 2
+    loop s0
+    
+    mov ax, 4c00h
+    int 21h
+
+codesg  ends
+
+end start
+```
+
+###  字符串大小写转换
+
+```assembly
+assume cs:codesg, ds:datasg
+
+datasg segment
+    db "Xing"
+    db "zhiAng"
+datasg ends
+
+codesg segment
+start:
+    mov ax, datasg
+    mov ds, ax
+    mov bx, 0
+    mov cx, 4
+# 转大写
+s:  mov al, ds:[bx]
+    and al, 11011111b
+    mov ds:[bx], al
+    inc bx
+    loop s
+
+# 转小写
+    mov bx, 4
+    mov cx, 6
+s0: mov al, ds:[bx]
+    or al, 00100000b
+    mov ds:[bx], al
+    inc bx
+    loop s0
+
+    mov ax, 4c00h
+    int 21h
+codesg ends
+
+end start
+```
+
+###  SI和DI
+
+源地址和目的地址寄存器
+
+将一段字符拷贝一份
+
+```assembly
+assume cs:codesg, ds:datasg
+
+datasg segment
+    db "XingZhiang"
+    db ".........."
+datasg ends
+
+codesg segment
+start:
+    mov ax, datasg
+    mov ds, ax
+    mov si, 0
+    mov di, 10
+    mov cx, 5
+s:  mov ax, ds:[si]
+    mov ds:[di], ax
+    add si, 2
+    add di, 2
+    loop s
+
+    mov ax, 4c00h
+    int 21h
+codesg ends
+
+end start
+```
+
+###   数据宽度指定
+
+引进X ptr操作符指明内存长度，示例如下：
+
+```assembly
+# 指定立即数宽度为一个字(16位)
+mov word ptr ds:[0], 1
+# 低字节加1
+inc byte ptr [bx]
+```
+
+注意 __push__ 和 __pop__  总是1个字
+
+###   div指令
+
+div是除法指令，使用div做除法要注意一下问题:
+
+1. 除数:有8位和16位两种，在一个reg或内存单元中。
+2. 被除数:默认放在ax或dx和ax中存放，dx存放高16位，ax放低16位。
+3. 结果:如果除数为8位，则al存储除法操作的商，ah存储余数;  如果除数为16位，则ax存储除法操作的商，dx存储除法操作的余数。
+
+```assembly
+div byte ptr ds:[0]
+# (al) = (ax) / ((ds)*16 + 0)的商
+# (ah) = (ax) / ((ds)*16 + 0)的余数
+
+div word ptr es:[0]
+# (ax) = ((dx)*10000H + (ax)) / ((es)*16 + 0)的商
+# (bx) = ((dx)*10000H + (ax)) / ((es)*16 + 0)的余数
+```
+
+###   转移指令
+
+*  jump
+
+  1. 段内短转移和近转移
+
+     ```assembly
+     jmp short 标号 (IP) = (IP) + 8位
+     jmp near ptr 标号 (IP) = (IP) + 16位
+     ```
+
+  2. 段间转移
+
+     ```assembly
+     jmp far ptr 标号 
+     jmp dword ptr #高地址是段地址，低地址是偏移地址
+     ```
+
+* jcxz指令
+
+  条件转移指令
+
+  所有条件转移指令均为短转移，所以机器码中包含的是位移，而不是目的地址ip转移范围-128~127
+
+  操作：当(cx)=0时跳，负责不跳
+
