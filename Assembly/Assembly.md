@@ -683,3 +683,146 @@ div word ptr es:[0]
 
   操作：当(cx)=0时跳，负责不跳
 
+####   练习
+
+将屏幕中间置字符,效果如下
+
+<img src="./img/assa.gif" alt="image-20210815172748176" style="zoom:50%;" />
+
+```assembly
+assume cs:codesg, ds:datasg
+
+datasg segment
+    dw 1920,2080,2240,64
+    db "My precious!!!!!"
+    db 82h,0ach,0f9h
+datasg ends
+
+codesg segment
+start:
+    mov ax, datasg
+    mov ds, ax
+
+    mov ax, 0B800h
+    mov es, ax
+
+    mov cx, 3
+    xor di, di
+    xor si, si
+s1: mov ax, di
+    mov bl, 2
+    div bl
+    mov si, ax
+    mov ah, [si+24]
+
+    mov si, ds:[6]
+    mov bp, [di]
+
+    mov dx, cx
+    mov bx, 0
+
+    mov cx, 16
+s2: mov al, [bx+8]
+    mov es:[bp+si], al
+    mov es:[bp+si+1], ah
+    inc bx
+    add si, 2
+    loop s2
+
+    mov cx, dx
+    add di, 2
+    loop s1
+
+
+    mov ax, 4c00h
+    int 21h
+codesg ends
+
+end start
+```
+
+###  ret和retf
+
+* ret是转移指令，用栈中的数据，修改IP的内容，从而实现近转移
+
+  本质：
+
+  (IP) = ((SS)*16 + (SP))
+
+  (SP) = (SP) + 2	
+
+* retf是转移指令，用栈中的数据，修改CS和IP的内容，从而实现远转移
+
+  本质：
+
+  (IP) = ((SS)*16 + (SP))
+
+  (SP) = (SP) + 2	
+
+  (CS) = ((SS)*16 + (SP))
+
+  (SP) = (SP) + 2
+
+###  call
+
+call指令功能：
+
+1. 将当前的IP或CS和IP压入栈中
+2. 转移
+
+####  基本使用形式
+
+```assembly
+call 标号
+# (sp) = (sp) - 2
+# ((ss)*16 +(sp)) = (ip)
+# (ip) = (ip) + 16位位移
+call far ptr 标号
+# (sp) = (sp) - 2
+# ((ss)*16 +(sp)) = (cs)
+# (sp) = (sp) - 2
+# ((ss)*16 +(sp)) = (ip)
+# (cs) = 标号所在段的段地址
+# (ip) = 标号所在段的偏移地址
+call ax
+# (sp) = (sp) - 2
+# ((ss)*16 +(sp)) = (ip)
+# (ip) = (ax)
+call word ptr 内存单元地址
+# push ip
+# jmp word ptr 内存单元地址
+call dword ptr 内存单元地址
+# push cs
+# push ip
+# jmp word ptr 内存单元地址
+```
+
+###  mul指令
+
+1. 两个相乘的数:要么都是8位，要么都是16位。如果是8位，一个默认放在al中，另一个放在8位reg或内存字节单元中;如果是16位，一个在AX中，另一个在16位reg或内存字单元中。
+2. 结果:如果是8位乘法，结果默认放在ax中;如果是16位乘法，结果高位默认在dx中存放，低位在ax中存放。
+
+格式：
+
+```assembly
+mul reg
+mul mem
+mul byte ptr ds:[0]
+```
+
+###  函数
+
+```assembly
+assume  cs:codesg 
+codesg segment
+	mov cx, 3
+s:	mov ax, 1
+	call dadd
+    loop s
+   
+dadd:add ax, ax
+	ret
+codesg ends
+end
+```
+
