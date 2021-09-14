@@ -607,11 +607,11 @@ p_0 = 2 \Delta y - \Delta x
 $$
 4. 从 $k=0$ 开始，在沿线段路径的每个 $x$ 处，进行下列检测:如果 $p_0<0$,下一个要绘制的点是 $(x_k+1,y)$ ,并且
 $$
-p_k+1= p_0 + 2\Delta y
+p_{k+1}= p_k + 2\Delta y
 $$
 否则，下一个要绘制的点是 $(x_k+1, y_k+1) $，并且
 $$
-p_k+1 = p_k+ 2 \Delta y- 2 \Delta x
+p_{k+1} = p_k+ 2 \Delta y- 2 \Delta x
 $$
 5. 重复步骤4,共 $\Delta x -1$次。 
 
